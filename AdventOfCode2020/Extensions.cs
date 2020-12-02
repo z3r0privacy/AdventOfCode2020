@@ -8,6 +8,29 @@ namespace AdventOfCode2020
 {
     public static class Extensions
     {
+        public static List<string> Tokenize(this string s, string splitChars)
+        {
+            var tokens = new List<string>();
+            var current = "";
+            foreach (var c in s)
+            {
+                if (splitChars.Contains(c))
+                {
+                    if (!string.IsNullOrEmpty(current))
+                    {
+                        tokens.Add(current);
+                    }
+                    current = "";
+                } else
+                {
+                    current += c;
+                }
+            }
+            if (!string.IsNullOrEmpty(current)) tokens.Add(current);
+
+            return tokens;
+        }
+
         public static T GetIfPresent<K,T>(this Dictionary<K,T> dic, K key, T valueElse = default)
         {
             if (dic == null) throw new ArgumentNullException(nameof(dic));
