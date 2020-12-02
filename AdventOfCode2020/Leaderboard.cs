@@ -38,7 +38,7 @@ namespace AdventOfCode2020
         private static async Task DownloadLeaderboard(string id)
         {
             //Console.WriteLine("Downloading leaderboard " + id);
-            var url = $"https://adventofcode.com/2019/leaderboard/private/view/{id}.json";
+            var url = $"https://adventofcode.com/2020/leaderboard/private/view/{id}.json";
             
             using var wc = new WebClient();
             var cookie = File.ReadAllText(Path.Combine("NoGit", "cookie.txt"));
@@ -53,7 +53,7 @@ namespace AdventOfCode2020
             if (timeStamp == null) return "";
             var ts = int.Parse(timeStamp);
             var localEndDateTime = new DateTime(1970, 1, 1,0,0,0,DateTimeKind.Utc).AddSeconds(ts).ToLocalTime();
-            var localStartDateTime = new DateTime(2019, 12, dayNr, 6, 0, 0, DateTimeKind.Local);
+            var localStartDateTime = new DateTime(2020, 12, dayNr, 6, 0, 0, DateTimeKind.Local);
             var duration = localEndDateTime - localStartDateTime;
             var hours = (int)duration.TotalHours;
             return $"{hours:D2}:{duration:mm\\:ss}";

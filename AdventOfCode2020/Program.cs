@@ -81,7 +81,7 @@ namespace AdventOfCode2020
             Console.WriteLine($"\n\n*** Time to compute in total: {timeUsed} ***");
 
 #if (DEBUG == false)
-            leaderboards.ForEach(async t => Console.WriteLine(await t));
+            leaderboards.ForEach(t => Console.WriteLine(t.Result));
 #else
             Console.WriteLine("\nLeaderboard is only displayed in Release mode to prevent distractions during solving");
 #endif
