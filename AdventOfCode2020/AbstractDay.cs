@@ -7,39 +7,12 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2020
 {
-    class ResultData
-    {
-        public TimeSpan Task1Time { get; set; }
-        public TimeSpan Task2Time { get; set; }
-        public TimeSpan TotalTime => Task1Time + Task2Time;
-        public string ResultT1 { get; set; }
-        public string ResultT2 { get; set; }
-        public int Day { get; set; }
-
-        private string Duration(TimeSpan t)
-        {
-            var hours = (int)t.TotalHours;
-            return $"{hours:D2}:{t:mm\\:ss\\.fff}";
-        }
-
-        public override string ToString()
-        {
-            var format =@"
-################################
-Day {0} (Total time: {1})
-Task1 (Time: {2}): {3}
-Task2 (Time: {4}): {5}
-";
-
-            return string.Format(format, Day, Duration(TotalTime), Duration(Task1Time), ResultT1, Duration(Task2Time), ResultT2);
-        }
-    }
-
     abstract class AbstractDay
     {
         public delegate bool TryParse<T>(string input, out T num);
 
         internal int Day { get; set; }
+        internal virtual string DayName { get; } = "(no name)";
 
         private protected string _file;
         private string content = null;
@@ -50,6 +23,13 @@ Task2 (Time: {4}): {5}
 
         internal virtual bool IsLongRunning1 => false;
         internal virtual bool IsLongRunning2 => false;
+
+        internal TimeSpan Task1Time { get; set; }
+        internal TimeSpan Task2Time { get; set; }
+        internal TimeSpan TotalTime => Task1Time + Task2Time;
+        internal string ResultT1 { get; set; }
+        internal string ResultT2 { get; set; }
+
 
         public AbstractDay()
         {
@@ -115,8 +95,35 @@ Task2 (Time: {4}): {5}
             } catch(Exception e)
             {
                 return e.Message;
+            }   
+        }
+
+        private string Duration(TimeSpan t)
+        {
+            var hours = (int)t.TotalHours;
+            return $"{hours:D2}:{t:mm\\:ss\\.fff}";
+        }
+
+        public override string ToString()
+        {
+            var width = 32;
+            var format = @"
+################################
+{0}
+Day {1} (Total time: {2})
+Task1 (Time: {3}): {4}
+Task2 (Time: {5}): {6}
+";
+            var dayW = DayName.Length + 2;
+            var remain = width - dayW;
+            var left = remain >> 1;
+            var right = left;
+            if ((remain&1) > 0)
+            {
+                right++;
             }
-            
+            var localDayName = new string('#', left) + $" {DayName} " + new string('#', right);
+            return string.Format(format, localDayName, Day, Duration(TotalTime), Duration(Task1Time), ResultT1, Duration(Task2Time), ResultT2);
         }
 
         private protected abstract object Task1();
@@ -196,7 +203,7 @@ Task2 (Time: {4}): {5}
             return ReadInput().ToCharArray();
         }
 
-        internal ResultData ExecDay(bool useCached = false, bool skipLongRunners = false)
+        internal void ExecDay(bool useCached = false, bool skipLongRunners = false)
         {
             var start = DateTime.Now;
             if (!(useCached && CachedResult1 != null && CachedResult2 != null))
@@ -207,22 +214,17 @@ Task2 (Time: {4}): {5}
             {
                 PrepareTask1();
             }
-            var r1 = Int_Task1(useCached, skipLongRunners);
+            ResultT1 = Int_Task1(useCached, skipLongRunners);
             var afterT1 = DateTime.Now;
             if (!(useCached && CachedResult2 != null))
             {
                 PrepareTask2();
             }
-            var r2 = Int_Task2(useCached, skipLongRunners);
+            ResultT2 = Int_Task2(useCached, skipLongRunners);
             var end = DateTime.Now;
-            return new ResultData
-            {
-                Day = Day,
-                ResultT1 = r1,
-                ResultT2 = r2,
-                Task1Time = afterT1 - start,
-                Task2Time = end - afterT1,
-            };
+
+            Task1Time = afterT1 - start;
+            Task2Time = end - afterT1;
         }
     }
 }
