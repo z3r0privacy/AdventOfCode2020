@@ -7,6 +7,7 @@ namespace AdventOfCode2020
 {
     class Day08 : AbstractDay
     {
+        internal override string DayName => "Handheld Halting";
         private protected override object CachedResult1 => 2003;
         private protected override object CachedResult2 => 1984;
 

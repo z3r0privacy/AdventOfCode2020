@@ -7,6 +7,7 @@ namespace AdventOfCode2020
 {
     class Day03 : AbstractDay
     {
+        internal override string DayName => "Toboggan Trajectory";
         private protected override object CachedResult1 => 191;
         private protected override object CachedResult2 => 1478615040;
 

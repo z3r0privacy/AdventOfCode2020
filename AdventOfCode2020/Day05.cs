@@ -7,6 +7,7 @@ namespace AdventOfCode2020
 {
     class Day05 : AbstractDay
     {
+        internal override string DayName => "Binary Boarding";
         private protected override object CachedResult1 => 995;
         private protected override object CachedResult2 => 569;
 

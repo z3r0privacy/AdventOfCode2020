@@ -7,6 +7,7 @@ namespace AdventOfCode2020
 {
     class Day02 : AbstractDay
     {
+        internal override string DayName => "Password Philosophy";
         private protected override object CachedResult1 => 460;
         private protected override object CachedResult2 => 251;
 

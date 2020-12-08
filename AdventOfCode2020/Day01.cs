@@ -7,6 +7,7 @@ namespace AdventOfCode2020
 {
     class Day01 : AbstractDay
     {
+        internal override string DayName => "Report Repair";
         private protected override object CachedResult1 => 913824;
         private protected override object CachedResult2 => 240889536;
 

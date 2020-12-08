@@ -48,13 +48,11 @@ namespace AdventOfCode2020
             }
 #endif
 
-            var results = new ResultData[days.Count];
-
             var start = DateTime.Now;
 
             days.Take(days.Count - TAKE_SEPERATE).AsParallel().ForAll(d =>
               {
-                  results[d.Day - 1] = d.ExecDay(
+                  d.ExecDay(
 #if DEBUG
                     true
 #else 
@@ -65,18 +63,16 @@ namespace AdventOfCode2020
 
             foreach (var d in days.Skip(days.Count - TAKE_SEPERATE))
             {
-                var task = d.ExecDay();
-                
-                results[d.Day - 1] = task;
+                d.ExecDay();
             }
 
             var duration = DateTime.Now - start;
             var hours = (int)duration.TotalHours;
             var timeUsed = $"{hours:D2}:{duration:mm\\:ss\\.fff}";
 
-            foreach (var r in results)
+            foreach (var d in days)
             {
-                Console.Write(r);
+                Console.Write(d);
             }
             Console.WriteLine($"\n\n*** Time to compute in total: {timeUsed} ***");
 

@@ -8,6 +8,7 @@ namespace AdventOfCode2020
 {
     class Day04 : AbstractDay
     {
+        internal override string DayName => "Passport Processing";
         private protected override object CachedResult1 => 206;
         private protected override object CachedResult2 => 123;
 
