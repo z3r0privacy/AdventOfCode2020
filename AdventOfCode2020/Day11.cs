@@ -21,21 +21,21 @@ namespace AdventOfCode2020
             var mods = new[] { -1, 0, 1 };
             foreach (var m1 in mods)
             {
-                foreach (var m2 in mods)
+                var y2 = m1 + y;
+                if (y2 >= 0 && y2 < layout.Length)
                 {
-                    if (m1 == 0 && m2 == 0) continue;
+                    foreach (var m2 in mods)
+                    {
+                        if (m1 == 0 && m2 == 0) continue;
 
-                    try
-                    {
-                        if (layout[y + m1][x + m2] == find)
+                        var x2 = m2 + x;
+                        if (x2 >= 0 && x2 < layout[y2].Length)
                         {
-                            count++;
+                            if (layout[y + m1][x + m2] == find)
+                            {
+                                count++;
+                            }
                         }
-                    }
-                    catch (IndexOutOfRangeException) { }
-                    catch (Exception)
-                    {
-                        throw;
                     }
                 }
             }
@@ -44,36 +44,44 @@ namespace AdventOfCode2020
 
         private protected override object Task1()
         {
-            var layout = ReadInputAsLines().Select(l => l.ToCharArray()).ToArray();
+            var layout1 = ReadInputAsLines().Select(l => l.ToCharArray()).ToArray();
+
+            var layout2 = new char[layout1.Length][];
+            for(var i = 0; i < layout2.Length; i++)
+            {
+                layout2[i] = new char[layout1[i].Length];
+            }
+
+            var current = layout1;
+            var next = layout2;
 
             var hasChanges = true;
             while (hasChanges)
             {
                 hasChanges = false;
-                var newLayout = new char[layout.Length][];
-                for (var r = 0; r < layout.Length; r++)
+                for (var r = 0; r < layout1.Length; r++)
                 {
-                    newLayout[r] = new char[layout[r].Length];
-                    for (var c = 0; c < newLayout[r].Length; c++)
+                    for (var c = 0; c < layout1[r].Length; c++)
                     {
-                        if (layout[r][c] == FREE && CountSurrounding(layout, TAKEN, c, r) == 0)
+                        if (current[r][c] == FREE && CountSurrounding(current, TAKEN, c, r) == 0)
                         {
-                            newLayout[r][c] = TAKEN;
+                            next[r][c] = TAKEN;
                             hasChanges = true;
-                        } else if (layout[r][c] == TAKEN && CountSurrounding(layout, TAKEN, c, r) >= 4)
+                        } else if (current[r][c] == TAKEN && CountSurrounding(current, TAKEN, c, r) >= 4)
                         {
-                            newLayout[r][c] = FREE;
+                            next[r][c] = FREE;
                             hasChanges = true;
                         } else
                         {
-                            newLayout[r][c] = layout[r][c];
+                            next[r][c] = current[r][c];
                         }
                     }
                 }
-                layout = newLayout;
+                current = next;
+                next = current == layout1 ? layout2 : layout1;
             }
 
-            return layout.Sum(r => r.Count(c => c == TAKEN));
+            return layout1.Sum(r => r.Count(c => c == TAKEN));
         }
 
 
@@ -86,20 +94,19 @@ namespace AdventOfCode2020
                 {
                     x2 += mx;
                     y2 += my;
-                    try
+                    if (y2 >= 0 && y2 < layout.Length)
                     {
-                        if (layout[y2][x2] == FLOOR) continue;
-                        if (layout[y2][x2] == find) return true;
-                        return false;
-                    } catch (IndexOutOfRangeException)
-                    {
-                        return false;
-                    } catch(Exception)
-                    {
-                        throw;
+                        if (x2 >= 0 && x2 < layout[y2].Length)
+                        {
+                            if (layout[y2][x2] == FLOOR) continue;
+                            if (layout[y2][x2] == find) return true;
+                            return false;
+                        }
                     }
+                    return false;
                 }
             }
+
             var count = 0;
             var mods = new[] { -1, 0, 1 };
             foreach (var m1 in mods)
@@ -119,38 +126,45 @@ namespace AdventOfCode2020
 
         private protected override object Task2()
         {
-            var layout = ReadInputAsLines().Select(l => l.ToCharArray()).ToArray();
+            var layout1 = ReadInputAsLines().Select(l => l.ToCharArray()).ToArray();
 
+            var layout2 = new char[layout1.Length][];
+            for (var i = 0; i < layout2.Length; i++)
+            {
+                layout2[i] = new char[layout1[i].Length];
+            }
+
+            var current = layout1;
+            var next = layout2;
             var hasChanges = true;
             while (hasChanges)
             {
                 hasChanges = false;
-                var newLayout = new char[layout.Length][];
-                for (var r = 0; r < layout.Length; r++)
+                for (var r = 0; r < layout1.Length; r++)
                 {
-                    newLayout[r] = new char[layout[r].Length];
-                    for (var c = 0; c < newLayout[r].Length; c++)
+                    for (var c = 0; c < layout1[r].Length; c++)
                     {
-                        if (layout[r][c] == FREE && CountVisible(layout, TAKEN, c, r) == 0)
+                        if (current[r][c] == FREE && CountVisible(current, TAKEN, c, r) == 0)
                         {
-                            newLayout[r][c] = TAKEN;
+                            next[r][c] = TAKEN;
                             hasChanges = true;
                         }
-                        else if (layout[r][c] == TAKEN && CountVisible(layout, TAKEN, c, r) >= 5)
+                        else if (current[r][c] == TAKEN && CountVisible(current, TAKEN, c, r) >= 5)
                         {
-                            newLayout[r][c] = FREE;
+                            next[r][c] = FREE;
                             hasChanges = true;
                         }
                         else
                         {
-                            newLayout[r][c] = layout[r][c];
+                            next[r][c] = current[r][c];
                         }
                     }
                 }
-                layout = newLayout;
+                current = next;
+                next = current == layout1 ? layout2 : layout1;
             }
 
-            return layout.Sum(r => r.Count(c => c == TAKEN));
+            return layout1.Sum(r => r.Count(c => c == TAKEN));
         }
     }
 }
