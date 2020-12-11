@@ -29,7 +29,7 @@ namespace AdventOfCode2020
 
         private protected override object Task2()
         {
-            var nums = ReadInputAsLines<int>(int.TryParse);
+            var nums = ReadInputAsLines<long>(long.TryParse);
             for (var i = 0; i < nums.Length; i++)
             {
                 for (var j = i + 1; j < nums.Length; j++)
