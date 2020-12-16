@@ -7,8 +7,8 @@ namespace AdventOfCode2020
 {
     class Day15 : AbstractDay
     {
-        //private protected override object CachedResult1 => 447;
-        //private protected override object CachedResult2 => 11721679;
+        private protected override object CachedResult1 => 447;
+        private protected override object CachedResult2 => 11721679;
         internal override string DayName => "Rambunctious Recitation";
 
         private List<int> _numbers;
