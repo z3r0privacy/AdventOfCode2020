@@ -8,6 +8,10 @@ namespace AdventOfCode2020
 {
     public static class Extensions
     {
+        public static string Rev(this string s)
+        {
+            return new string(s.Reverse().ToArray());
+        }
         public static List<string> Tokenize(this string s, string splitChars)
         {
             var tokens = new List<string>();
