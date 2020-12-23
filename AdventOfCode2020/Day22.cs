@@ -7,6 +7,10 @@ namespace AdventOfCode2020
 {
     class Day22 : AbstractDay
     {
+
+        // Got help from reddit: No implementation or details, but reading the rules more exactly
+        // (subgames only play with X cards, NOT all remaining)
+
         private protected override object CachedResult1 => 32598;
         private protected override object CachedResult2 => 35836;
         internal override string DayName => "Crab Combat";
@@ -41,24 +45,8 @@ namespace AdventOfCode2020
             return sum;
         }
 
-        private Dictionary<int, List<((Queue<int> p1In,Queue<int> p2In),int winner)>> _cache;
-
         private int PlayGame(Queue<int> p1, Queue<int> p2)
         {
-            var id = 100 * p1.Count + p2.Count;
-            if (_cache.TryGetValue(id, out var list))
-            {
-                foreach (((var q1, var q2), var w) in list)
-                {
-                    if (q1.SequenceEqual(p1) && q2.SequenceEqual(p2))
-                    {
-                        return w;
-                    }
-                }
-            } else
-            {
-                _cache.Add(id, new List<((Queue<int> p1In, Queue<int> p2In), int winner)>());
-            }
             var input = (new Queue<int>(p1), new Queue<int>(p2));
             var states = new List<(Queue<int> p1, Queue<int> p2)>();
             while (p1.Count > 0 && p2.Count > 0)
@@ -67,7 +55,6 @@ namespace AdventOfCode2020
                 {
                     if (sp1.SequenceEqual(p1) && sp2.SequenceEqual(p2))
                     {
-                        _cache[id].Add((input, 1));
                         return 1;
                     }
                 }
@@ -93,13 +80,11 @@ namespace AdventOfCode2020
                 }
             }
             var win = p1.Count == 0 ? 2 : 1;
-            _cache[id].Add((input, win));
             return win;
         }
 
         private protected override object Task2()
         {
-            _cache = new Dictionary<int, List<((Queue<int> p1In, Queue<int> p2In), int winner)>>();
             var input = ReadInputAsLines();
             var player1 = new Queue<int>(input.Skip(1).TakeWhile(l => !string.IsNullOrWhiteSpace(l)).Select(l => int.Parse(l)));
             var player2 = new Queue<int>(input.SkipWhile(l => !string.IsNullOrWhiteSpace(l)).Skip(2).Select(l => int.Parse(l)));
